@@ -47,3 +47,8 @@ Route::middleware([IsUserAuth::class])->group(function () {
         });
     });
 });
+
+Route::get('/check-public', function() {
+    return response()->json(scandir(base_path('public')));
+});
+
