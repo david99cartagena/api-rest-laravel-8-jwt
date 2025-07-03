@@ -52,3 +52,8 @@ Route::get('/check-public', function() {
     return response()->json(scandir(base_path('public')));
 });
 
+Route::get('/hello', function() {
+    return 'Hello from Laravel!';
+});
+
+
