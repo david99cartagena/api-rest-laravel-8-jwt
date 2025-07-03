@@ -173,6 +173,13 @@ return [
          * API security definitions. Will be generated into documentation file.
         */
         'securityDefinitions' => [
+            'bearerAuth' => [ // Nombre que usas en @OA\SecurityScheme()
+                'type' => 'http',
+                'scheme' => 'bearer',
+                'bearerFormat' => 'JWT',
+                'in' => 'header',
+                'name' => 'Authorization',
+            ],
             'securitySchemes' => [
                 /*
                  * Examples of Security schemes

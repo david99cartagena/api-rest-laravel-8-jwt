@@ -24,30 +24,7 @@ use Exception;
  */
 class ProductController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/api/products",
-     *     summary="Listar productos",
-     *     tags={"Productos"},
-     *     @OA\Response(
-     *         response=200,
-     *         description="Lista de productos",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="status", type="integer", example=200),
-     *             @OA\Property(
-     *                 property="products",
-     *                 type="array",
-     *                 @OA\Items(ref="#/components/schemas/Product")
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Error del servidor"
-     *     )
-     * )
-     */
+    
     public function index()
     {
         try {
