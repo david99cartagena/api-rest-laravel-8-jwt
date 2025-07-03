@@ -33,7 +33,22 @@ Route::apiResource('products', ProductController::class);
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
-Route::middleware([IsUserAuth::class])->group(function () {
+// Route::middleware([IsUserAuth::class])->group(function () {
+//     Route::controller(AuthController::class)->group(function () {
+//         Route::post('logout', 'logout');
+//         Route::get('me', 'getUser');
+//     });
+
+//     Route::get('/listadeCategorias', [CategorieController::class, 'index']);
+
+//     Route::middleware([IsAdmin::class])->group(function () {
+//         Route::controller(CategorieController::class)->group(function () {
+//             Route::apiResource('categories', CategorieController::class);
+//         });
+//     });
+// });
+
+Route::middleware(['isUserAuth'])->group(function () {
     Route::controller(AuthController::class)->group(function () {
         Route::post('logout', 'logout');
         Route::get('me', 'getUser');
@@ -41,19 +56,15 @@ Route::middleware([IsUserAuth::class])->group(function () {
 
     Route::get('/listadeCategorias', [CategorieController::class, 'index']);
 
-    Route::middleware([IsAdmin::class])->group(function () {
-        Route::controller(CategorieController::class)->group(function () {
-            Route::apiResource('categories', CategorieController::class);
-        });
+    Route::middleware(['isAdmin'])->group(function () {
+        Route::apiResource('categories', CategorieController::class);
     });
 });
 
-Route::get('/check-public', function() {
-    return response()->json(scandir(base_path('public')));
-});
+// Route::get('/check-public', function() {
+//     return response()->json(scandir(base_path('public')));
+// });
 
-Route::get('/hello', function() {
-    return 'Hello from Laravel!';
-});
-
-
+// Route::get('/hello', function() {
+//     return 'Hello from Laravel!';
+// });
