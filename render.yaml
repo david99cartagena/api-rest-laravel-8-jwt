@@ -1,0 +1,49 @@
+services:
+  - type: web
+    name: laravel-api
+    env: php
+    branch: main
+    buildCommand: |
+      composer install --optimize-autoloader --no-dev
+      php artisan config:clear
+      php artisan route:cache
+      php artisan view:cache
+      php artisan l5-swagger:generate
+      chmod -R 775 storage bootstrap/cache
+    startCommand: php artisan serve --host 0.0.0.0 --port 10000
+    publishPath: public
+    envVars:
+      - key: APP_NAME
+        value: Laravel
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        value: base64:0ZXbdHVIYMYGb1h0FOs/n38zif80H5pAeZAlwM3hU9w=
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: https://api-rest-laravel-8-jwt.onrender.com
+
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        value: aws-0-us-east-2.pooler.supabase.com
+      - key: DB_PORT
+        value: 6543
+      - key: DB_DATABASE
+        value: postgres
+      - key: DB_USERNAME
+        value: postgres.vcovenbrjegwzxmelxqp
+      - key: DB_PASSWORD
+        value: 0LastPassSuPa1.
+
+      - key: JWT_SECRET
+        value: wJzgzbLqmlp46Huo3XhFWReQPjduDy17DOG2q3LvmMg7iBlaavm3UTWWoxfLbjJ1
+
+      - key: LOG_CHANNEL
+        value: stack
+      - key: LOG_LEVEL
+        value: debug
+
+      - key: L5_SWAGGER_CONST_HOST
+        value: https://api-rest-laravel-8-jwt.onrender.com
