@@ -1,16 +1,9 @@
 services:
   - type: web
     name: laravel-api
-    env: php
+    env: docker
+    plan: free
     branch: main
-    buildCommand: |
-      composer install --no-dev --optimize-autoloader
-      php artisan config:clear
-      php artisan view:clear
-      php artisan route:clear
-      chmod -R 775 storage bootstrap/cache
-
-    publishPath: public
     envVars:
       - key: APP_NAME
         value: Laravel
