@@ -4,11 +4,10 @@ services:
     env: php
     branch: main
     buildCommand: |
-      composer install --optimize-autoloader --no-dev
+      composer install --no-dev --optimize-autoloader
       php artisan config:clear
-      php artisan route:cache
-      php artisan view:cache
-      php artisan l5-swagger:generate
+      php artisan view:clear
+      php artisan route:clear
       chmod -R 775 storage bootstrap/cache
 
     publishPath: public
