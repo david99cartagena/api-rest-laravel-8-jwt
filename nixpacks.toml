@@ -1,9 +1,9 @@
 [phases.setup]
-nixPkgs = ["php81", "composer", "nodejs_20", "openssl", "pkg-config"]
+nixPkgs = ["php81", "composer", "nodejs_20"]
 
 [phases.build]
 cmds = [
-  "composer install --no-dev --optimize-autoloader",
+  "composer install --optimize-autoloader --no-dev",
   "npm install --omit=dev",
   "php artisan config:clear",
   "php artisan config:cache",
