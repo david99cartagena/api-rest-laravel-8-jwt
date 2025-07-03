@@ -10,7 +10,7 @@ services:
       php artisan view:cache
       php artisan l5-swagger:generate
       chmod -R 775 storage bootstrap/cache
-    startCommand: php artisan serve --host 0.0.0.0 --port 8081
+
     publishPath: public
     envVars:
       - key: APP_NAME
@@ -29,7 +29,6 @@ services:
       - key: LOG_LEVEL
         value: debug
 
-      # Base de datos PostgreSQL (Supabase)
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_HOST
@@ -43,10 +42,8 @@ services:
       - key: DB_PASSWORD
         value: 0LastPassSuPa1.
 
-      # JWT
       - key: JWT_SECRET
         value: wJzgzbLqmlp46Huo3XhFWReQPjduDy17DOG2q3LvmMg7iBlaavm3UTWWoxfLbjJ1
 
-      # Swagger
       - key: L5_SWAGGER_CONST_HOST
         value: api-rest-laravel-8-jwt.onrender.com
