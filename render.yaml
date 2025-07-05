@@ -39,3 +39,5 @@ services:
 
       - key: L5_SWAGGER_CONST_HOST
         value: api-rest-laravel-8-jwt.onrender.com
+      - key: L5_SWAGGER_UI_DOC_EXPANSION
+        value: list
