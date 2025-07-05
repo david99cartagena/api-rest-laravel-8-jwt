@@ -1,8 +1,8 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "API de Productos",
-        "description": "Documentación de la API para gestionar productos.",
+        "title": "API para gestiónar productos, usuarios y categorías",
+        "description": "Documentación de la API para gestión de productos, usuarios y categorías.",
         "contact": {
             "email": "soporte@tuempresa.com"
         },
@@ -15,30 +15,44 @@
         }
     ],
     "paths": {
-        "/api/login": {
+        "/api/register": {
             "post": {
                 "tags": [
-                    "Auth"
+                    "Users"
                 ],
-                "summary": "Login de usuario",
-                "operationId": "a3b306d14572d1f4bd6c064b3233e7b8",
+                "summary": "Registrar un nuevo usuario",
+                "description": "Crea un nuevo usuario con los datos proporcionados. El campo 'role' puede ser 'user' o 'admin'.",
+                "operationId": "register",
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "required": [
+                                    "name",
+                                    "role",
                                     "email",
                                     "password"
                                 ],
                                 "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "David Prueba"
+                                    },
+                                    "role": {
+                                        "description": "puede ser 'user' o 'admin'",
+                                        "type": "string",
+                                        "example": "user"
+                                    },
                                     "email": {
                                         "type": "string",
-                                        "format": "email"
+                                        "format": "email",
+                                        "example": "davidprueba1@gmail.com"
                                     },
                                     "password": {
                                         "type": "string",
-                                        "format": "password"
+                                        "format": "password",
+                                        "example": "prueba12."
                                     }
                                 },
                                 "type": "object"
@@ -48,12 +62,43 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Autenticación exitosa",
+                        "description": "Usuario creado correctamente",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "token": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Se guardó correctamente el Usuario"
+                                        },
+                                        "user": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno al guardar Usuario",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Error interno al guardar Usuario"
+                                        },
+                                        "error": {
                                             "type": "string"
                                         }
                                     },
@@ -65,16 +110,45 @@
                 }
             }
         },
-        "/api/products": {
-            "get": {
+        "/api/login": {
+            "post": {
                 "tags": [
-                    "Productos"
+                    "Users"
                 ],
-                "summary": "Listar productos",
-                "operationId": "1bfaa78d1c2c3848ab8165c5dadcad3e",
+                "summary": "Iniciar sesión de usuario",
+                "description": "Inicia sesión con email y contraseña. Devuelve un token JWT si las credenciales son válidas.",
+                "operationId": "loginUser",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "description": "Correo electrónico del usuario registrado",
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "davidprueba@gmail.com"
+                                    },
+                                    "password": {
+                                        "description": "Contraseña del usuario",
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "prueba123."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
-                        "description": "Lista de productos",
+                        "description": "Inicio de sesión exitoso",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -83,10 +157,943 @@
                                             "type": "integer",
                                             "example": 200
                                         },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Token generado exitosamente"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJh..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Credenciales inválidas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 401
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Valida de nuevo correo o contraseña"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Credenciales Invalidas"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error al generar el token JWT",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "No se pudo crear el token"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Error interno del servidor"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/me": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Obtener usuario autenticado",
+                "description": "Retorna los datos del usuario autenticado utilizando el token JWT en el encabezado Authorization.",
+                "operationId": "getUserProfile",
+                "responses": {
+                    "200": {
+                        "description": "Usuario obtenido exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Usuario obtenido existosamente"
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "David Cartagena"
+                                                },
+                                                "role": {
+                                                    "type": "string",
+                                                    "example": "admin"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "davidprueba@gmail.com"
+                                                },
+                                                "email_verified_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": null
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-02T16:33:23.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-02T16:33:23.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado - token no proporcionado o inválido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 401
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "No autorizado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Cerrar sesión del usuario",
+                "description": "Invalida el token JWT del usuario autenticado y cierra su sesión.",
+                "operationId": "logoutUser",
+                "responses": {
+                    "200": {
+                        "description": "Sesión cerrada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Se cerró sesión exitosamente"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado - token no proporcionado o inválido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 401
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Token inválido o no proporcionado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/listadeCategorias": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Listar todas las categorías (requiere autenticación)",
+                "description": "Devuelve una lista de todas las categorías. Esta ruta requiere un token JWT.",
+                "operationId": "getAllCategories",
+                "responses": {
+                    "200": {
+                        "description": "Categorías obtenidas exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Categorias obtenidos existosamente"
+                                        },
+                                        "categories": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Comida"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Categoría de alimentos"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-07-01T12:00:00Z"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-07-02T10:00:00Z"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado - token no proporcionado o inválido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 401
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Token no válido o expirado"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno del servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Error interno del servidor"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Mensaje de excepción"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/categories": {
+            "post": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Crear una nueva categoría (requiere ser admin)",
+                "description": "Permite a un usuario con rol de administrador crear una nueva categoría. Requiere token JWT.",
+                "operationId": "storeCategory",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "code"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "Nombre de la categoría",
+                                        "type": "string",
+                                        "example": "Bebidas"
+                                    },
+                                    "code": {
+                                        "description": "Código identificador único de la categoría",
+                                        "type": "string",
+                                        "example": "BEV001"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Categoría creada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Se guardó correctamente la categoria"
+                                        },
+                                        "categorie": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Bebidas"
+                                                },
+                                                "code": {
+                                                    "type": "string",
+                                                    "example": "BEV001"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-04T13:00:00Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-04T13:00:00Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado - token no proporcionado o inválido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 401
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Token no válido o expirado"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno al guardar la categoría",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Error interno al guardar la categoria"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Mensaje de error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/categories/{id}": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Obtener una categoría por ID (requiere ser admin)",
+                "description": "Retorna los datos de una categoría específica. Requiere token JWT válido y permisos de administrador.",
+                "operationId": "getCategoryById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la categoría a buscar",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Categoría encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Se encontró la categoria con id: 1"
+                                        },
+                                        "categorie": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Bebidas"
+                                                },
+                                                "code": {
+                                                    "type": "string",
+                                                    "example": "BEV001"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-04T13:00:00Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-04T13:00:00Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Categoría no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 404
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "No se encontró la categoria con id: 99"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "No query results for model [App\\\\Models\\\\Categorie] 99"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado - token no proporcionado o inválido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 401
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "No autorizado"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno del servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Error interno del servidor"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Mensaje de excepción"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Actualizar una categoría (requiere ser admin)",
+                "description": "Edita los datos de una categoría existente. Requiere token JWT válido y permisos de administrador.",
+                "operationId": "updateCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la categoría que se desea actualizar",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Nuevo nombre de la categoría",
+                                        "type": "string",
+                                        "example": "Snacks"
+                                    },
+                                    "code": {
+                                        "description": "Nuevo código de la categoría",
+                                        "type": "string",
+                                        "example": "SNK001"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Categoría actualizada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Se editó correctamente la categoria"
+                                        },
+                                        "categorie": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Snacks"
+                                                },
+                                                "code": {
+                                                    "type": "string",
+                                                    "example": "SNK001"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-01T10:00:00Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-04T15:00:00Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Categoría no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 404
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Categoria no encontrado"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "No query results for model [App\\\\Models\\\\Categorie] 99"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno al editar la categoría",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Error interno al editar la categoria"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Mensaje de excepción"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Eliminar una categoría (requiere ser admin)",
+                "description": "Elimina una categoría existente. Requiere token JWT válido y permisos de administrador.",
+                "operationId": "deleteCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la categoría a eliminar",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Categoría eliminada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Se eliminó correctamente la categoria"
+                                        },
+                                        "categorie": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Bebidas"
+                                                },
+                                                "code": {
+                                                    "type": "string",
+                                                    "example": "BEV001"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-01T10:00:00Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-04T15:00:00Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Categoría no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 404
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "categoria no encontrado"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "No query results for model [App\\\\Models\\\\Categorie] 99"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno del servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Error interno al eliminar la categoria"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Mensaje de excepción"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/products": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Listar todos los productos",
+                "description": "Devuelve una lista con todos los productos disponibles.",
+                "operationId": "getProducts",
+                "responses": {
+                    "200": {
+                        "description": "Productos obtenidos exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Productos obtenidos existosamente"
+                                        },
                                         "products": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/Product"
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "papas"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "demo1"
+                                                    },
+                                                    "price": {
+                                                        "type": "string",
+                                                        "example": "13.00"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-07-02T14:59:39.000000Z"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-07-02T14:59:42.000000Z"
+                                                    }
+                                                },
+                                                "type": "object"
                                             }
                                         }
                                     },
@@ -96,7 +1103,595 @@
                         }
                     },
                     "500": {
-                        "description": "Error del servidor"
+                        "description": "Error interno del servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Error interno del servidor"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Exception details"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Crear un nuevo producto",
+                "description": "Registra un nuevo producto en la base de datos. La propiedad 'price' es opcional.",
+                "operationId": "storeProduct",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "Nombre único del producto (mínimo 3 caracteres)",
+                                        "type": "string",
+                                        "minLength": 3,
+                                        "example": "papas fritas"
+                                    },
+                                    "description": {
+                                        "description": "Descripción del producto (mínimo 10 caracteres)",
+                                        "type": "string",
+                                        "minLength": 10,
+                                        "example": "Papas fritas crocantes y saladas"
+                                    },
+                                    "price": {
+                                        "description": "Precio del producto (opcional, por defecto 0)",
+                                        "type": "string",
+                                        "example": "15.50"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Producto creado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Se guardó correctamente el producto"
+                                        },
+                                        "product": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "papas fritas"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Papas fritas crocantes y saladas"
+                                                },
+                                                "price": {
+                                                    "type": "string",
+                                                    "example": "15.50"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-04T10:30:00Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-04T10:30:00Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error de validación",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 400
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Error de validación. Por favor revisa los datos ingresados."
+                                        },
+                                        "error": {
+                                            "type": "object",
+                                            "example": {
+                                                "name": [
+                                                    "El campo name es obligatorio."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno al guardar el producto",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Error interno al guardar el producto"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Mensaje de error interno"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/{id}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Obtener un producto por ID",
+                "description": "Devuelve la información de un producto específico. Si el producto no existe, retorna un error 404.",
+                "operationId": "getProductById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del producto",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Producto encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Se encontró el producto con id: 1"
+                                        },
+                                        "product": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "papas"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "demo1"
+                                                },
+                                                "price": {
+                                                    "type": "string",
+                                                    "example": "13.00"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-02T14:59:39.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-02T14:59:42.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Producto no encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 404
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "No se encontró el producto con id: 999"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "No query results for model [App\\\\Models\\\\Product] 999"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno del servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Error interno del servidor"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Mensaje de excepción"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Actualizar un producto por ID",
+                "description": "Actualiza los datos de un producto específico. El campo 'price' es opcional. Retorna 404 si el producto no existe.",
+                "operationId": "updateProduct",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del producto a actualizar",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Nombre del producto (mínimo 3 caracteres, opcional)",
+                                        "type": "string",
+                                        "minLength": 3,
+                                        "example": "papas actualizadas"
+                                    },
+                                    "description": {
+                                        "description": "Descripción (mínimo 10 caracteres, opcional)",
+                                        "type": "string",
+                                        "minLength": 10,
+                                        "example": "Descripción actualizada del producto"
+                                    },
+                                    "price": {
+                                        "description": "Precio del producto (opcional)",
+                                        "type": "string",
+                                        "example": "17.99"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Producto actualizado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Se editó correctamente el producto"
+                                        },
+                                        "product": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "papas actualizadas"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Descripción actualizada del producto"
+                                                },
+                                                "price": {
+                                                    "type": "string",
+                                                    "example": "17.99"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-02T14:59:39.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-04T12:00:00.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error de validación",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 400
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Error de validación. Por favor revisa los datos ingresados."
+                                        },
+                                        "error": {
+                                            "type": "object",
+                                            "example": {
+                                                "description": [
+                                                    "La descripción debe tener al menos 10 caracteres."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Producto no encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 404
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Producto no encontrado"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "No query results for model [App\\\\Models\\\\Product] 999"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno al editar el producto",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Error interno al editar el producto"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Mensaje de excepción"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Eliminar un producto por ID",
+                "description": "Elimina un producto específico de la base de datos. Retorna error si no existe.",
+                "operationId": "deleteProduct",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del producto a eliminar",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Producto eliminado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Se eliminó correctamente el producto"
+                                        },
+                                        "product": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "papas"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "demo1"
+                                                },
+                                                "price": {
+                                                    "type": "string",
+                                                    "example": "13.00"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-02T14:59:39.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-07-04T12:00:00.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Producto no encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 404
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Producto no encontrado"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "No query results for model [App\\\\Models\\\\Product] 999"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno al eliminar el producto",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Error interno al eliminar el producto"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Mensaje de excepción"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -104,11 +1699,54 @@
     },
     "components": {
         "schemas": {
-            "Product": {
-                "title": "Producto",
+            "Category": {
+                "title": "Categoría",
+                "description": "Esquema de una categoría de productos",
                 "required": [
                     "name",
-                    "description",
+                    "code"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Identificador único de la categoría",
+                        "type": "integer",
+                        "readOnly": true,
+                        "example": 1
+                    },
+                    "name": {
+                        "description": "Nombre de la categoría (máx. 100 caracteres)",
+                        "type": "string",
+                        "maxLength": 100,
+                        "example": "Ropa Deportiva"
+                    },
+                    "code": {
+                        "description": "Código de la categoría (máx. 100 caracteres)",
+                        "type": "string",
+                        "maxLength": 100,
+                        "example": "DEP2024"
+                    },
+                    "created_at": {
+                        "description": "Fecha de creación",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "example": "2024-01-01T12:00:00Z"
+                    },
+                    "updated_at": {
+                        "description": "Fecha de última actualización",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "example": "2024-01-02T12:00:00Z"
+                    }
+                },
+                "type": "object"
+            },
+            "Product": {
+                "title": "Producto",
+                "description": "Esquema que representa un producto",
+                "required": [
+                    "name",
                     "price"
                 ],
                 "properties": {
@@ -118,17 +1756,20 @@
                         "example": 1
                     },
                     "name": {
+                        "description": "Nombre único del producto",
                         "type": "string",
                         "example": "Zapatos deportivos"
                     },
                     "description": {
+                        "description": "Descripción del producto (opcional)",
                         "type": "string",
-                        "example": "Zapatos cómodos para correr"
+                        "example": "Zapatos cómodos para correr",
+                        "nullable": true
                     },
                     "price": {
-                        "type": "number",
-                        "format": "float",
-                        "example": 59.99
+                        "description": "Precio del producto como string. Si se omite, se toma como '0'.",
+                        "type": "string",
+                        "example": "59.99"
                     },
                     "created_at": {
                         "type": "string",
@@ -144,17 +1785,100 @@
                     }
                 },
                 "type": "object"
+            },
+            "User": {
+                "title": "Usuario",
+                "description": "Esquema que representa a un usuario del sistema",
+                "required": [
+                    "name",
+                    "role",
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "ID único del usuario",
+                        "type": "integer",
+                        "readOnly": true,
+                        "example": 1
+                    },
+                    "name": {
+                        "description": "Nombre del usuario",
+                        "type": "string",
+                        "example": "Juan Pérez"
+                    },
+                    "role": {
+                        "description": "Rol del usuario (máx. 30 caracteres)",
+                        "type": "string",
+                        "maxLength": 30,
+                        "example": "admin"
+                    },
+                    "email": {
+                        "description": "Correo electrónico único del usuario",
+                        "type": "string",
+                        "format": "email",
+                        "example": "juan@example.com"
+                    },
+                    "email_verified_at": {
+                        "description": "Fecha de verificación del correo electrónico",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-01T10:00:00Z",
+                        "nullable": true
+                    },
+                    "password": {
+                        "description": "Contraseña del usuario (solo escritura)",
+                        "type": "string",
+                        "format": "password",
+                        "writeOnly": true,
+                        "example": "******"
+                    },
+                    "remember_token": {
+                        "description": "Token para recordar sesión (solo lectura)",
+                        "type": "string",
+                        "readOnly": true,
+                        "example": "e2a12b32aa98c3",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "description": "Fecha de creación",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "example": "2024-01-01T12:00:00Z"
+                    },
+                    "updated_at": {
+                        "description": "Fecha de última actualización",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "example": "2024-01-02T12:00:00Z"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Autenticación JWT usando el esquema Bearer. Ejemplo: 'Bearer {token}'",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
             }
         }
     },
     "tags": [
         {
-            "name": "Auth",
-            "description": "Auth"
+            "name": "Products",
+            "description": "Operaciones públicas sobre productos"
         },
         {
-            "name": "Productos",
-            "description": "Productos"
+            "name": "Categories",
+            "description": "Administración de categorías (requiere autenticación)"
+        },
+        {
+            "name": "Users",
+            "description": "Gestión de usuarios y roles (requiere autenticación)"
         }
     ]
 }
