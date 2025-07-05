@@ -9,16 +9,57 @@ use Illuminate\Database\Eloquent\Model;
  * @OA\Schema(
  *     schema="Product",
  *     title="Producto",
+ *     description="Esquema que representa un producto",
  *     type="object",
- *     required={"name", "description", "price"},
- *     @OA\Property(property="id", type="integer", example=1, readOnly=true),
- *     @OA\Property(property="name", type="string", example="Zapatos deportivos"),
- *     @OA\Property(property="description", type="string", example="Zapatos cómodos para correr"),
- *     @OA\Property(property="price", type="number", format="float", example=59.99),
- *     @OA\Property(property="created_at", type="string", format="date-time", example="2024-01-01T12:00:00Z", readOnly=true),
- *     @OA\Property(property="updated_at", type="string", format="date-time", example="2024-01-05T12:00:00Z", readOnly=true)
+ *     required={"name", "price"},
+ *     
+ *     @OA\Property(
+ *         property="id",
+ *         type="integer",
+ *         readOnly=true,
+ *         example=1
+ *     ),
+ *     
+ *     @OA\Property(
+ *         property="name",
+ *         type="string",
+ *         example="Zapatos deportivos",
+ *         description="Nombre único del producto"
+ *     ),
+ *     
+ *     @OA\Property(
+ *         property="description",
+ *         type="string",
+ *         nullable=true,
+ *         example="Zapatos cómodos para correr",
+ *         description="Descripción del producto (opcional)"
+ *     ),
+ *     
+ *     @OA\Property(
+ *         property="price",
+ *         type="string",
+ *         example="59.99",
+ *         description="Precio del producto como string. Si se omite, se toma como '0'."
+ *     ),
+ *     
+ *     @OA\Property(
+ *         property="created_at",
+ *         type="string",
+ *         format="date-time",
+ *         readOnly=true,
+ *         example="2024-01-01T12:00:00Z"
+ *     ),
+ *     
+ *     @OA\Property(
+ *         property="updated_at",
+ *         type="string",
+ *         format="date-time",
+ *         readOnly=true,
+ *         example="2024-01-05T12:00:00Z"
+ *     )
  * )
  */
+
 class Product extends Model
 {
     use HasFactory;

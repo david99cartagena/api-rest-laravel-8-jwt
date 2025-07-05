@@ -19,7 +19,11 @@ class IsUserAuth
         if (auth('api')->user()) {
             return $next($request);
         } else {
-            return response()->json(['message' => 'No autorizado'], 401);
+            return response()->json([
+                'status' => 401,
+                'msg' => 'Valida de nuevo',
+                'error' => 'Acceso no autorizado'
+            ], 401);
         }
     }
 }

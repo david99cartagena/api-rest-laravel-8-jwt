@@ -9,47 +9,50 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Exception;
 
-/**
- * @OA\Info(
- *     version="1.0.0",
- *     title="API de Productos",
- *     description="Documentación de la API para gestionar productos.",
- *     @OA\Contact(email="soporte@tuempresa.com")
- * )
- *
- * @OA\Server(
- *     url="http://localhost/tutorial-backend-app/public",
- *     description="Servidor local"
- * )
- */
+
 class ProductController extends Controller
 {
-    
+
     /**
      * @OA\Get(
      *     path="/api/products",
-     *     summary="Listar productos",
-     *     tags={"Productos"},
+     *     summary="Listar todos los productos",
+     *     description="Devuelve una lista con todos los productos disponibles.",
+     *     operationId="getProducts",
+     *     tags={"Products"},
      *     @OA\Response(
      *         response=200,
-     *         description="Lista de productos",
+     *         description="Productos obtenidos exitosamente",
      *         @OA\JsonContent(
-     *             type="object",
      *             @OA\Property(property="status", type="integer", example=200),
+     *             @OA\Property(property="msg", type="string", example="Productos obtenidos existosamente"),
      *             @OA\Property(
      *                 property="products",
      *                 type="array",
-     *                 @OA\Items(ref="#/components/schemas/Product")
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="name", type="string", example="papas"),
+     *                     @OA\Property(property="description", type="string", example="demo1"),
+     *                     @OA\Property(property="price", type="string", example="13.00"),
+     *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-07-02T14:59:39.000000Z"),
+     *                     @OA\Property(property="updated_at", type="string", format="date-time", example="2025-07-02T14:59:42.000000Z")
+     *                 )
      *             )
      *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Error del servidor"
+     *         description="Error interno del servidor",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example=500),
+     *             @OA\Property(property="msg", type="string", example="Error interno del servidor"),
+     *             @OA\Property(property="error", type="string", example="Exception details")
+     *         )
      *     )
      * )
      */
-    
+
     public function index()
     {
         try {
@@ -57,13 +60,14 @@ class ProductController extends Controller
 
             return response()->json([
                 'status' => 200,
+                'msg' => 'Productos obtenidos existosamente',
                 'products' => $products
             ], 200);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 500,
                 'msg' => 'Error interno del servidor',
-                $e
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -79,11 +83,81 @@ class ProductController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @OA\Post(
+     *     path="/api/products",
+     *     summary="Crear un nuevo producto",
+     *     description="Registra un nuevo producto en la base de datos. La propiedad 'price' es opcional.",
+     *     operationId="storeProduct",
+     *     tags={"Products"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name"},
+     *             @OA\Property(
+     *                 property="name",
+     *                 type="string",
+     *                 minLength=3,
+     *                 example="papas fritas",
+     *                 description="Nombre único del producto (mínimo 3 caracteres)"
+     *             ),
+     *             @OA\Property(
+     *                 property="description",
+     *                 type="string",
+     *                 minLength=10,
+     *                 example="Papas fritas crocantes y saladas",
+     *                 description="Descripción del producto (mínimo 10 caracteres)"
+     *             ),
+     *             @OA\Property(
+     *                 property="price",
+     *                 type="string",
+     *                 example="15.50",
+     *                 description="Precio del producto (opcional, por defecto 0)"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Producto creado exitosamente",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example=200),
+     *             @OA\Property(property="msg", type="string", example="Se guardó correctamente el producto"),
+     *             @OA\Property(
+     *                 property="product",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="papas fritas"),
+     *                 @OA\Property(property="description", type="string", example="Papas fritas crocantes y saladas"),
+     *                 @OA\Property(property="price", type="string", example="15.50"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-07-04T10:30:00Z"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2025-07-04T10:30:00Z")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error de validación",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example=400),
+     *             @OA\Property(property="msg", type="string", example="Error de validación. Por favor revisa los datos ingresados."),
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="object",
+     *                 example={"name": {"El campo name es obligatorio."}}
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error interno al guardar el producto",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example=500),
+     *             @OA\Property(property="msg", type="string", example="Error interno al guardar el producto"),
+     *             @OA\Property(property="error", type="string", example="Mensaje de error interno")
+     *         )
+     *     )
+     * )
      */
+    
     public function store(Request $request)
     {
         try {
@@ -95,7 +169,8 @@ class ProductController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 400,
-                    'errors' => $validator->errors(),
+                    'msg' => 'Error de validación. Por favor revisa los datos ingresados.',
+                    'error' => $validator->errors(),
                 ], 400);
             }
 
@@ -114,17 +189,64 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 500,
                 'msg' => 'Error interno al guardar el producto',
-                $e
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @OA\Get(
+     *     path="/api/products/{id}",
+     *     summary="Obtener un producto por ID",
+     *     description="Devuelve la información de un producto específico. Si el producto no existe, retorna un error 404.",
+     *     operationId="getProductById",
+     *     tags={"Products"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del producto",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Producto encontrado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example=200),
+     *             @OA\Property(property="msg", type="string", example="Se encontró el producto con id: 1"),
+     *             @OA\Property(
+     *                 property="product",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="papas"),
+     *                 @OA\Property(property="description", type="string", example="demo1"),
+     *                 @OA\Property(property="price", type="string", example="13.00"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-07-02T14:59:39.000000Z"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2025-07-02T14:59:42.000000Z")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Producto no encontrado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example=404),
+     *             @OA\Property(property="msg", type="string", example="No se encontró el producto con id: 999"),
+     *             @OA\Property(property="error", type="string", example="No query results for model [App\\Models\\Product] 999")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error interno del servidor",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example=500),
+     *             @OA\Property(property="msg", type="string", example="Error interno del servidor"),
+     *             @OA\Property(property="error", type="string", example="Mensaje de excepción")
+     *         )
+     *     )
+     * )
      */
+
     public function show($id)
     {
         try {
@@ -133,19 +255,20 @@ class ProductController extends Controller
 
             return response()->json([
                 'status' => 200,
+                'msg' => 'Se encontró el producto con id: ' . $id,
                 'product' => $product
             ], 200);
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'status' => 404,
                 'msg' => 'No se encontró el producto con id: ' . $id,
-                $e
+                'error' => $e->getMessage(),
             ], 404);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 500,
                 'msg' => 'Error interno del servidor',
-                $e
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -162,12 +285,96 @@ class ProductController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @OA\Put(
+     *     path="/api/products/{id}",
+     *     summary="Actualizar un producto por ID",
+     *     description="Actualiza los datos de un producto específico. El campo 'price' es opcional. Retorna 404 si el producto no existe.",
+     *     operationId="updateProduct",
+     *     tags={"Products"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del producto a actualizar",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="name",
+     *                 type="string",
+     *                 minLength=3,
+     *                 example="papas actualizadas",
+     *                 description="Nombre del producto (mínimo 3 caracteres, opcional)"
+     *             ),
+     *             @OA\Property(
+     *                 property="description",
+     *                 type="string",
+     *                 minLength=10,
+     *                 example="Descripción actualizada del producto",
+     *                 description="Descripción (mínimo 10 caracteres, opcional)"
+     *             ),
+     *             @OA\Property(
+     *                 property="price",
+     *                 type="string",
+     *                 example="17.99",
+     *                 description="Precio del producto (opcional)"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Producto actualizado exitosamente",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example=200),
+     *             @OA\Property(property="msg", type="string", example="Se editó correctamente el producto"),
+     *             @OA\Property(
+     *                 property="product",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="papas actualizadas"),
+     *                 @OA\Property(property="description", type="string", example="Descripción actualizada del producto"),
+     *                 @OA\Property(property="price", type="string", example="17.99"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-07-02T14:59:39.000000Z"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2025-07-04T12:00:00.000000Z")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error de validación",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example=400),
+     *             @OA\Property(property="msg", type="string", example="Error de validación. Por favor revisa los datos ingresados."),
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="object",
+     *                 example={"description": {"La descripción debe tener al menos 10 caracteres."}}
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Producto no encontrado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example=404),
+     *             @OA\Property(property="msg", type="string", example="Producto no encontrado"),
+     *             @OA\Property(property="error", type="string", example="No query results for model [App\\Models\\Product] 999")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error interno al editar el producto",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example=500),
+     *             @OA\Property(property="msg", type="string", example="Error interno al editar el producto"),
+     *             @OA\Property(property="error", type="string", example="Mensaje de excepción")
+     *         )
+     *     )
+     * )
      */
+
     public function update(Request $request, $id)
     {
         try {
@@ -181,7 +388,8 @@ class ProductController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 400,
-                    'errors' => $validator->errors(),
+                    'msg' => 'Error de validación. Por favor revisa los datos ingresados.',
+                    'error' => $validator->errors(),
                 ], 400);
             }
 
@@ -196,23 +404,70 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 404,
                 'msg' => 'Producto no encontrado',
-                $e
+                'error' => $e->getMessage(),
             ], 404);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 500,
                 'msg' => 'Error interno al editar el producto',
-                $e
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @OA\Delete(
+     *     path="/api/products/{id}",
+     *     summary="Eliminar un producto por ID",
+     *     description="Elimina un producto específico de la base de datos. Retorna error si no existe.",
+     *     operationId="deleteProduct",
+     *     tags={"Products"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del producto a eliminar",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Producto eliminado exitosamente",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example=200),
+     *             @OA\Property(property="msg", type="string", example="Se eliminó correctamente el producto"),
+     *             @OA\Property(
+     *                 property="product",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="papas"),
+     *                 @OA\Property(property="description", type="string", example="demo1"),
+     *                 @OA\Property(property="price", type="string", example="13.00"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-07-02T14:59:39.000000Z"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2025-07-04T12:00:00.000000Z")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Producto no encontrado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example=404),
+     *             @OA\Property(property="msg", type="string", example="Producto no encontrado"),
+     *             @OA\Property(property="error", type="string", example="No query results for model [App\\Models\\Product] 999")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error interno al eliminar el producto",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example=500),
+     *             @OA\Property(property="msg", type="string", example="Error interno al eliminar el producto"),
+     *             @OA\Property(property="error", type="string", example="Mensaje de excepción")
+     *         )
+     *     )
+     * )
      */
+
     public function destroy($id)
     {
         try {
@@ -228,13 +483,13 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 404,
                 'msg' => 'Producto no encontrado',
-                $e
+                'error' => $e->getMessage(),
             ], 404);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 500,
                 'msg' => 'Error interno al eliminar el producto',
-                $e
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
