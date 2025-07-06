@@ -5,8 +5,8 @@ namespace App\Swagger;
 /**
  * @OA\Info(
  *     version="1.0.0",
- *     title="API para gestiónar productos, usuarios y categorías",
- *     description="Documentación de la API para gestión de productos, usuarios y categorías.",
+ *     title="API de Gestión con JWT y Roles",
+ *     description="Esta API permite gestionar productos, usuarios y categorías con autenticación basada en JWT y control de acceso por roles.",
  *     @OA\Contact(
  *         email="soporte@tuempresa.com"
  *     )

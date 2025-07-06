@@ -155,6 +155,43 @@
         })
 
         window.ui = ui
+        /* setTimeout(() => {
+            const toggles = document.querySelectorAll('.model-toggle');
+            console.log("Toggles encontrados:", toggles.length);
+
+            toggles.forEach((toggle, index) => {
+                const isOpen = toggle.closest('.model-box')?.classList.contains('is-open');
+                console.log(`Toggle ${index + 1} está abierto:`, isOpen);
+
+                if (!isOpen) {
+                    toggle.click();
+                    console.log(`Toggle ${index + 1} clickeado para abrir`);
+                }
+            });
+        }, 2000); */
+
+        // Usamos MutationObserver para expandir los modelos apenas estén listos
+        const observer = new MutationObserver((mutations, obs) => {
+            const toggles = document.querySelectorAll('.model-toggle');
+            if (toggles.length > 0) {
+                // console.log("Model toggles detectados:", toggles.length);
+                toggles.forEach((toggle, index) => {
+                    const isOpen = toggle.closest('.model-box')?.classList.contains('is-open');
+                    // console.log(`Toggle ${index + 1} abierto:`, isOpen);
+                    if (!isOpen) {
+                        toggle.click();
+                        // console.log(`Toggle ${index + 1} clickeado para abrir`);
+                    }
+                });
+                // Detenemos el observer después de expandir
+                obs.disconnect();
+            }
+        });
+        // Observamos el contenedor Swagger UI
+        observer.observe(document.getElementById('swagger-ui'), {
+            childList: true,
+            subtree: true
+        });
 
         @if(in_array('oauth2', array_column(config('l5-swagger.defaults.securityDefinitions.securitySchemes'), 'type')))
         ui.initOAuth({
