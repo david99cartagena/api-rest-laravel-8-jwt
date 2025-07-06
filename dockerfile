@@ -16,7 +16,7 @@ WORKDIR /var/www/html
 # Copia Composer desde imagen oficial
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copia los archivos del proyecto
+# Copia los archivos del proyecto al contenedor
 COPY . .
 
 # Instala dependencias PHP
@@ -26,10 +26,15 @@ RUN composer install --optimize-autoloader --no-dev
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 storage bootstrap/cache
 
-# Configura Apache para servir desde /public
-RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
+# Configura Apache para servir Laravel desde el directorio /public
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /etc/apache2/sites-available/000-default.conf
 
-# Expone el puerto 80 (Apache)
+# Asegura que el .htaccess funcione
+RUN echo "<Directory /var/www/html/public>\n\
+    AllowOverride All\n\
+    </Directory>" >> /etc/apache2/apache2.conf
+
+# Expone el puerto 80
 EXPOSE 80
 
 # Inicia Apache en foreground

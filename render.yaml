@@ -37,7 +37,8 @@ services:
       - key: JWT_SECRET
         value: wJzgzbLqmlp46Huo3XhFWReQPjduDy17DOG2q3LvmMg7iBlaavm3UTWWoxfLbjJ1
 
+      # Swagger config para Render
       - key: L5_SWAGGER_CONST_HOST
-        value: api-rest-laravel-8-jwt.onrender.com
+        value: https://api-rest-laravel-8-jwt.onrender.com
       - key: L5_SWAGGER_UI_DOC_EXPANSION
         value: list
