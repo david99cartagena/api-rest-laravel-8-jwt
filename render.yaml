@@ -4,7 +4,11 @@ services:
     env: docker
     plan: free
     branch: main
+
     envVars:
+      # ==================================
+      # App config
+      # ==================================
       - key: APP_NAME
         value: Laravel
       - key: APP_ENV
@@ -16,11 +20,17 @@ services:
       - key: APP_URL
         value: https://api-rest-laravel-8-jwt.onrender.com
 
+      # ==================================
+      # Logging
+      # ==================================
       - key: LOG_CHANNEL
         value: stack
       - key: LOG_LEVEL
         value: debug
 
+      # ==================================
+      # Base de datos (PostgreSQL - Supabase)
+      # ==================================
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_HOST
@@ -34,11 +44,16 @@ services:
       - key: DB_PASSWORD
         value: 0LastPassSuPa1.
 
+      # ==================================
+      # JWT
+      # ==================================
       - key: JWT_SECRET
         value: wJzgzbLqmlp46Huo3XhFWReQPjduDy17DOG2q3LvmMg7iBlaavm3UTWWoxfLbjJ1
 
-      # Swagger config para Render
+      # ==================================
+      # Swagger config (reutiliza APP_URL)
+      # ==================================
       - key: L5_SWAGGER_CONST_HOST
-        value: https://api-rest-laravel-8-jwt.onrender.com
+        value: ${APP_URL}
       - key: L5_SWAGGER_UI_DOC_EXPANSION
         value: list
