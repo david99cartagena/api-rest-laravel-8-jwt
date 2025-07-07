@@ -226,12 +226,19 @@ También puedes optar por usar Supabase, una solución en línea basada en Postg
     ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_19.png)
 
 -   Listar todas las categorías (requiere autenticación)
-    Validacion de Autenticacion
+
+    🔴Validacion de Autenticacion sin tener un token
+
     ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_20.png)
 
 -   Obtener una categoría por ID (requiere ser admin)
+
     ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_21.png)
-    Validacion de Autenticacion lista de categorias
-    ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_20.png)
-    Validacion de Autenticacion lista de categoria por id
-    ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_20.png)
+
+    Validacion de Autenticacion Lista de categorias
+
+    ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_22.png)
+
+    🔴Validacion de Autenticacion lista de categoria por id user
+
+    ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_23.png)
