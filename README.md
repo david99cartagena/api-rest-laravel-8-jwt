@@ -161,3 +161,24 @@ También puedes optar por usar Supabase, una solución en línea basada en Postg
     ```bash
      php artisan serve --port=8080
     ```
+
+## 🖥️ Imagenes de la Aplicacion
+
+![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_1.png)
+
+![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_2.png)
+
+![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_3.png)
+
+Products
+
+-   Listar todos los productos
+    ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_4.png)
+
+-   Obtener un producto por ID
+    ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_5.png)
+
+-   Actualizar un producto por ID
+    ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_6.png)
+    
+    ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_7.png)
