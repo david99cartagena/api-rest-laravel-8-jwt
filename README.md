@@ -170,7 +170,7 @@ También puedes optar por usar Supabase, una solución en línea basada en Postg
 
 ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_3.png)
 
-Products
+**Products**
 
 -   Listar todos los productos
     ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_4.png)
@@ -183,7 +183,7 @@ Products
 
     ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_7.png)
 
-Users
+**Users**
 
 -   Iniciar sesión de usuario
 
@@ -196,3 +196,15 @@ Users
     ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_10.png)
 
     ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_11.png)
+
+-   Obtener usuario autenticado
+
+    ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_12.png)
+
+    ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_13.png)
+
+-   Actualizar un usuario
+
+    ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_14.png)
+
+    ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_15.png)
