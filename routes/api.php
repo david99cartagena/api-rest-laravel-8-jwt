@@ -25,13 +25,14 @@ use Illuminate\Support\Facades\Route;
 
 // Route::post('/create', [ProductController::class, 'create']);
 // Route::post('/create', ['ProductController@create']);
-// Route::get('/products', [ProductController::class, 'getProducts']);
-// Route::get('/product/{id}', [ProductController::class, 'getProduct']);
-// Route::put('/product/{id}', [ProductController::class, 'update']);
+
 Route::apiResource('products', ProductController::class);
 // Route::apiResource('categories', CategorieController::class);
+Route::get('users', [AuthController::class, 'index']);
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+Route::put('/users/{id}', [AuthController::class, 'updateUser']);
+Route::delete('/users/{id}', [AuthController::class, 'destroy']);
 
 // Route::middleware([IsUserAuth::class])->group(function () {
 //     Route::controller(AuthController::class)->group(function () {
@@ -60,11 +61,3 @@ Route::middleware(['isUserAuth'])->group(function () {
         Route::apiResource('categories', CategorieController::class);
     });
 });
-
-// Route::get('/check-public', function() {
-//     return response()->json(scandir(base_path('public')));
-// });
-
-// Route::get('/hello', function() {
-//     return 'Hello from Laravel!';
-// });
