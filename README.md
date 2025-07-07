@@ -162,7 +162,7 @@ También puedes optar por usar Supabase, una solución en línea basada en Postg
      php artisan serve --port=8080
     ```
 
-## 🖥️ Imagenes de la Aplicacion
+## 📷 Imagenes de la Aplicacion
 
 ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_1.png)
 
@@ -180,5 +180,19 @@ Products
 
 -   Actualizar un producto por ID
     ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_6.png)
-    
+
     ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_7.png)
+
+Users
+
+-   Iniciar sesión de usuario
+
+    ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_8.png)
+
+    ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_9.png)
+
+-   🔴Iniciar sesión de usuario - Credenciales Invalidas
+
+    ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_10.png)
+
+    ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_11.png)
