@@ -242,3 +242,5 @@ También puedes optar por usar Supabase, una solución en línea basada en Postg
     🔴Validacion de Autenticacion lista de categoria por id
 
     ![](https://raw.githubusercontent.com/david99cartagena/api-rest-laravel-8-jwt/refs/heads/main/media/Screenshot_23.png)
+
+prueba
