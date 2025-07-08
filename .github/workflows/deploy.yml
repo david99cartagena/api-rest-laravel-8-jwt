@@ -3,7 +3,7 @@ name: Deploy Laravel App to Render
 on:
   push:
     branches:
-      - main # o cambia por la rama que uses
+      - main
 
 jobs:
   deploy:
@@ -16,7 +16,7 @@ jobs:
 
       - name: Debug deploy URL (no imprime valor real)
         run: echo "Triggering deploy..."
-        
+
       - name: Trigger Deploy Hook
         run: |
           curl -X POST "$RENDER_DEPLOY_HOOK_URL"
