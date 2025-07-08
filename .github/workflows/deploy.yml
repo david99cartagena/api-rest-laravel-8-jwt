@@ -3,7 +3,7 @@ name: Deploy Laravel App to Render
 on:
   push:
     branches:
-      - main  # o cambia por la rama que uses
+      - main # o cambia por la rama que uses
 
 jobs:
   deploy:
