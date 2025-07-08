@@ -14,6 +14,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Debug deploy URL (no imprime valor real)
+        run: echo "Triggering deploy..."
+        
       - name: Trigger Deploy Hook
         run: |
           curl -X POST "$RENDER_DEPLOY_HOOK_URL"
