@@ -13,6 +13,17 @@ Este proyecto está desplegado en:
 
 ---
 
+## 🧪 CI/CD con Laravel, Render y GitHub Actions
+
+Este proyecto implementa un flujo básico de **CI/CD (Integración y Despliegue Continuos)** usando:
+
+-   **Laravel** (PHP 8+)
+-   **Supabase** (como base de datos)
+-   **Render** (para despliegue automático)
+-   **GitHub Actions** (para ejecutar pruebas automatizadas)
+
+---
+
 ## ⚙️ Stack Tecnológico
 
 ### Backend

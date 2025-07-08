@@ -20,7 +20,11 @@ class IsAdmin
         if ($user && $user->role == 'admin') {
             return $next($request);
         } else {
-            return response()->json(['message' => 'Usted no tiene credenciales de Administrador'], 403);
+            return response()->json([
+                'status' => 403,
+                'msg' => 'Valida de nuevo',
+                'error' => 'Usted no tiene credenciales de Administrador'
+            ], 403);
         }
     }
 }
