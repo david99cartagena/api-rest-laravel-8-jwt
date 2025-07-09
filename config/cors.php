@@ -19,7 +19,9 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => [
+        'https://api-rest-laravel-8-jwt.onrender.com'
+    ],
 
     'allowed_origins_patterns' => [],
 

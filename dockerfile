@@ -37,5 +37,5 @@ RUN echo "<Directory /var/www/html/public>\n\
 # Expone el puerto 80
 EXPOSE 80
 
-# Inicia Apache en foreground
-CMD ["apache2-foreground"]
+# Ejecuta comandos Laravel y luego Apache
+CMD php artisan config:clear && php artisan cache:clear && apache2-foreground
