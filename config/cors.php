@@ -20,7 +20,9 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
-        'https://api-rest-laravel-8-jwt.onrender.com'
+        'http://127.0.0.1:8000', // desarrollo
+        'http://localhost:8000',
+        'https://api-rest-laravel-8-jwt.onrender.com', // producción
     ],
 
     'allowed_origins_patterns' => [],
