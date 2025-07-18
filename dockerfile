@@ -50,5 +50,11 @@ RUN echo "<Directory /var/www/html/public>\n\
 EXPOSE 80
 
 # Ejecuta comandos Laravel y luego Apache
-CMD php artisan config:clear && php artisan cache:clear && php artisan config:cache && apache2-foreground
+CMD php artisan config:clear && \
+    php artisan cache:clear && \
+    php artisan config:cache && \
+    php artisan l5-swagger:generate && \
+    apache2-foreground
+
+# CMD php artisan config:clear && php artisan cache:clear && php artisan config:cache && apache2-foreground
 # CMD php artisan optimize:clear && php artisan config:cache && apache2-foreground
