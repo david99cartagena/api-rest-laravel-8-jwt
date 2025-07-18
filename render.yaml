@@ -54,6 +54,6 @@ services:
       # Swagger config (reutiliza APP_URL)
       # ==================================
       - key: L5_SWAGGER_CONST_HOST
-        value: https://api-rest-laravel-8-jwt.onrender.com
+        value: ${APP_URL}
       - key: L5_SWAGGER_UI_DOC_EXPANSION
         value: list
