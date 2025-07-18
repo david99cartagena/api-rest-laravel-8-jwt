@@ -29,7 +29,7 @@ namespace App\Swagger;
  *
  * @OA\Server(
  *     url=L5_SWAGGER_CONST_HOST,
- *     description="Servidor local o producción"
+ *     description="Servidor actual"
  * )
  *
  * @OA\SecurityScheme(
