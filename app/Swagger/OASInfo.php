@@ -28,8 +28,8 @@ namespace App\Swagger;
  * )
  *
  * @OA\Server(
- *     url="http://localhost/tutorial-backend-app/public",
- *     description="Servidor local"
+ *     url=L5_SWAGGER_CONST_HOST,
+ *     description="Servidor local o producción"
  * )
  *
  * @OA\SecurityScheme(

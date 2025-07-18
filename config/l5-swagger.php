@@ -323,7 +323,7 @@ return [
          * Constants which can be used in annotations
          */
         'constants' => [
-            'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'api-rest-laravel-8-jwt.onrender.com'),
+            'L5_SWAGGER_CONST_HOST' => env('APP_URL', 'api-rest-laravel-8-jwt.onrender.com'),
         ],
     ],
 ];
